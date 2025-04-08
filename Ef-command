@@ -48,3 +48,41 @@ To display a single record based on PK Find()
 To display a single record based on Conditions SingleOrDefault()
 To update a record Entry()
 After modification in database we have to call a function to save changes in data base SaveChanges()
+
+
+---------------------------------------------
+
+ Controller-code
+ 
+ public JsonResult getCity(int StateCode)
+ {
+
+     var data = db.CityMasters.Where(x => x.StateCode == StateCode).ToList();
+     return Json(data);
+ }
+
+view code 
+--------------
+<script>
+    $(document).ready(function(){
+
+        $("#StateCode").change(function(){
+            var cid =$(this).val().trim();
+            var obj={StateCode:cid}
+            $.getJSON("/Home/getCity",obj,function(data){
+                var items = "<option>Select </option>";
+                console.log(data);
+                $.each(data,function(i,st){
+                    items = items +"<option value='"+st.cityCode+"'>"+st.cityName+"</option>"
+                })
+                console.log(items);
+                $("#City_code").html(items);
+            })
+        })
+    })
+
+</script>
+
+
+
+
