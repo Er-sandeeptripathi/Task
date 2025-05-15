@@ -1,3 +1,26 @@
+Install-Package Microsoft.EntityFrameworkCore
+Install-Package Microsoft.EntityFrameworkCore.SqlServer
+Install-Package Microsoft.EntityFrameworkCore.Tools
+Install-Package Microsoft.EntityFrameworkCore.Design
+Scaffold-DbContext "Data Source=AMIT-PATEL\SQLEXPRESS02; Initial Catalog=EntityDemo; Integrated Security=True; TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+Scaffold-DbContext "Server=147.93.98.25,1433;Database=devssrozgaar;User Id=ssrflightmode;Password=DevFl!ghtM0de;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models 
+
+ var users = db.UserMasters
+                  .Select(u => new SelectListItem
+                  {
+                      Value = u.UserId.ToString(),
+                      Text = u.UserName
+                  }).ToList();
+
+    ViewBag.UserList = users; // or use ViewData["UserList"]
+    return View();
+
+
+@Html.DropDownList("SelectedUserId", (IEnumerable<SelectListItem>)ViewBag.UserList, "-- Select User --", new { @class = "form-control" })
+
+
+
+
 Entity Framework Core
 Entity Framework Core(EF Core) is a cross-plateform ORM developed by Microsoft for .NET Core and .NET Framework.
 ORM stands for Object Relational Mapping. It helps to speed up application development and saves a lot of time to the developers.
