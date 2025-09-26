@@ -17,3 +17,12 @@ Scaffold-DbContext "Server=147.93.98.25,1433;Database=devssrozgaar;User Id=ssrfl
 
 
 @Html.DropDownList("SelectedUserId", (IEnumerable<SelectListItem>)ViewBag.UserList, "-- Select User --", new { @class = "form-control" })
+Connection string
+-----------------------------------
+var ConnectionString = builder.Configuration.GetConnectionString("");
+
+builder.Services.AddDbContext<RadheRadheContext>(Options => Options.UseSqlServer(ConnectionString));
+
+
+ 
+--------------------------------------------------
