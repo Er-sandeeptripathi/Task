@@ -1,0 +1,19 @@
+Install-Package Microsoft.EntityFrameworkCore
+Install-Package Microsoft.EntityFrameworkCore.SqlServer
+Install-Package Microsoft.EntityFrameworkCore.Tools
+Install-Package Microsoft.EntityFrameworkCore.Design
+Scaffold-DbContext "Data Source=AMIT-PATEL\SQLEXPRESS02; Initial Catalog=EntityDemo; Integrated Security=True; TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+Scaffold-DbContext "Server=147.93.98.25,1433;Database=devssrozgaar;User Id=ssrflightmode;Password=DevFl!ghtM0de;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models 
+
+ var users = db.UserMasters
+                  .Select(u => new SelectListItem
+                  {
+                      Value = u.UserId.ToString(),
+                      Text = u.UserName
+                  }).ToList();
+
+    ViewBag.UserList = users; // or use ViewData["UserList"]
+    return View();
+
+
+@Html.DropDownList("SelectedUserId", (IEnumerable<SelectListItem>)ViewBag.UserList, "-- Select User --", new { @class = "form-control" })
