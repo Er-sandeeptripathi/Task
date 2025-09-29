@@ -1,3 +1,6 @@
+
+
+
 Install-Package Microsoft.EntityFrameworkCore
 Install-Package Microsoft.EntityFrameworkCore.SqlServer
 Install-Package Microsoft.EntityFrameworkCore.Tools
@@ -26,3 +29,199 @@ builder.Services.AddDbContext<RadheRadheContext>(Options => Options.UseSqlServer
 
  
 --------------------------------------------------
+
+
+
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using demo2Entity.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+
+namespace demo2Entity.Controllers;
+
+public class HomeController : Controller
+{
+    private readonly ILogger<HomeController> _logger;
+    private readonly RadheRadheContext db;
+
+    public HomeController(ILogger<HomeController> logger, RadheRadheContext db)
+    {
+        _logger = logger;
+        this.db = db;
+    }
+
+    string msg = string.Empty;
+
+
+    [NonAction]
+    public void ddlCity()
+    {
+        List<CityMaster> data = db.CityMasters.ToList();
+        List<SelectListItem> item = new List<SelectListItem>();
+        foreach(CityMaster dd in data)
+        {
+            SelectListItem City = new SelectListItem();
+            City.Text = dd.CityName;
+            City.Value = dd.Id.ToString();
+            item.Add(City);
+        }
+
+        ViewBag.CityId = item;
+
+    }
+
+    [NonAction]
+    public void ddlStae()
+    {
+        List<StateMaster> data = db.StateMasters.ToList();
+        List<SelectListItem> item = new List<SelectListItem>();
+        foreach( StateMaster dd in data )
+        {
+            SelectListItem State = new SelectListItem();
+            State.Text = dd.StateName;
+            State.Value = dd.Id.ToString();
+
+            item.Add(State);
+        }
+
+
+        ViewBag.StateId = item;
+    }
+
+
+  
+    public IActionResult Index()
+    {
+        try
+        {
+            ddlCity();
+            ddlStae();
+            IEnumerable<User> data = db.Users.ToList();
+            return View(data);
+
+        }
+        catch
+        {
+
+        }
+        return View();
+    }
+    [HttpPost]
+    public IActionResult Index(User ur)
+    {
+        try
+        {
+
+            var user = db.Users.FirstOrDefault(x => x.Email==(ur.Email));
+            if (user != null)
+            {
+                msg = " User with this email exists";
+
+            }
+            else
+            {
+                ddlCity();
+                ddlStae();
+                db.Users.Add(ur);
+                db.SaveChanges();
+                msg = "User Record Inserted  successfully";
+
+            }
+
+
+        }
+        catch
+        {
+            msg = "sorry Unambe to   Inserted  Record";
+
+        }
+
+        TempData["msg"] = msg;
+
+
+        return RedirectToAction("Index");
+    }
+
+
+    public IActionResult DeleteRecord(int id )
+    {
+        try
+        {
+            User data = db.Users.Find(id);
+            db.Users.Remove(data);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+            msg = "Record Deleted successfully";
+
+        }
+        catch
+        {
+            msg = "Sorry Unable to  Deleted Record";
+
+        }
+        TempData["msg"] = msg;
+
+        return View();
+    }
+
+
+
+
+    public IActionResult EditRecord(int id )
+    {
+        try
+        {
+            User data = db.Users.Where(x => x.Id == (id)).FirstOrDefault();
+            ddlCity();
+            ddlStae();
+            return View(data);
+        }
+        catch
+        {
+
+        }
+        return View();
+    }
+    [HttpPost]
+    public IActionResult EditRecord(User ur)
+    {
+        try
+        {
+            User data = db.Users.Find(ur.Id);
+            data.Name = ur.Name;
+            data.Email = ur.Email;
+            data.Email = ur.Phoneno;
+            data.CityId = ur.CityId;
+            data.StateId = ur.StateId;
+            data.PasswordHash = ur.PasswordHash;
+            db.Users.Entry(data);
+            db.SaveChanges();
+
+            ddlCity();
+            ddlStae();
+            return RedirectToAction("Index");
+            msg = "Record Updated ";
+        }
+        catch
+        {
+            msg = "Sorry unable  to update record ";
+
+        }
+        return View();
+    }
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+}
+
+
+
+
