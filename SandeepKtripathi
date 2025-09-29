@@ -224,4 +224,36 @@ public class HomeController : Controller
 
 
 
+sessions
 
+------------------------------------
+
+        EmailId = HttpContext.Request.Query["Email"].ToString();
+
+        var user = db.LoginMasters.Where(u => u.Email == lm.Email && u.Password == lm.Password).FirstOrDefault();
+
+        if (!string.ReferenceEquals(user,null))
+        {
+            HttpContext.Session.SetString("UserEmail", user.Email); 
+            
+
+            return RedirectToAction("UserDash", "Home");
+        }
+        else
+        {
+            string msg = "Invalid Email-Password";
+            TempData["Msg"] = msg;
+        }
+
+        return View();
+
+var email= HttpContext.Session.GetString("UserEmail");
+       
+
+if (!string.ReferenceEquals(email,null))
+{
+    LoginMaster ud = db.LoginMasters.Where(x => x.Email.Equals(email)).FirstOrDefault();
+   
+    return View(ud);
+
+}
