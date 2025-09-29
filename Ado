@@ -210,3 +210,21 @@ public class HomeController : Controller
         return RedirectToAction("Index");
     }
 }
+
+
+
+
+
+USE [traviyo]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_GetCountries]    Script Date: 29-09-2025 12:37:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [dbo].[sp_GetCountries]
+AS
+BEGIN
+    SELECT CountryId, CountryName FROM Country
+END
